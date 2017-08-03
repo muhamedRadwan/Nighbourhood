@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nighborhood</title>
+     <link rel="stylesheet" href="css/bootstrap.min.css">
+     <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div id="mySidenav" class="sidenav">
+          <input type="text" placeholder="Filter" id="filter">
+          <ul class="text-center nav" id="places" data-bind="foreach: locations">
+            <li data-bind="text: title"></li>
+          </ul>
+        </div>
+            <span class="navbar-opener"><img class="opener" src="3.gif" width="35px" height="35px" title="Search"></span>
+
+        <div  id="map" class="col-sm-9 col-lg-10">
+          <!-- your page content -->
+            <div ></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="js/knockout-3.4.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/GoogleMap.js"></script>
+    <script src="js/main.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfVn3q_bZjXER6ZoM5saxoUavqlIRp5KQ&v=3&callback=octupus.init">
+    </script>
+
+  </body>
+</html>
