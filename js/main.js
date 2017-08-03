@@ -1,4 +1,4 @@
-var open=false;
+var open = false;
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -11,20 +11,16 @@ function closeNav() {
     document.getElementById("map").style.marginLeft = "0";
 }
 
-function toggle(){
-   
-}
-$('.navbar-opener').click(function(){
-     $('.opener').toggleClass('rightimg');
-     if (!open)
-        {
-            openNav();
-            open = true;
-            $(this).css( "left", "248px" );
-        }
-    else{
+
+$('.navbar-opener').click(function () {
+    $('.opener').toggleClass('rightimg');
+    if (!open) {
+        openNav();
+		open = true;
+		$(this).css("left", "248px");
+    } else {
         closeNav();
         open = false;
-        $(this).css( "left", "0" );
+        $(this).css("left", "0");
     }
 });

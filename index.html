@@ -5,7 +5,7 @@
      <meta charset="utf-8">
      <link rel="stylesheet" href="css/bootstrap.min.css">
      <link rel="stylesheet" href="css/style.css">
-     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <div class="container-fluid">
@@ -16,19 +16,17 @@
             <li data-bind="text: title, click: function () { clickMe(title);}"></li>
           </ul>
         </div>
-            <span class="navbar-opener"><img class="opener" src="imags/3.gif" width="35px" height="35px" title="Search"></span>
+            <span class="navbar-opener"><img class="opener" src="imags/3.gif" width="35" height="35" alt="Search"></span>
 
         <div  id="map" class="col-sm-9 col-lg-10">
-          <!-- your page content -->
-            <div ></div>
+          <!-- my page content -->
         </div>
       </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="js/knockout-3.4.2.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script src="js/GoogleMap.js"></script>
-    <script src="js/main.js"></script>
+    <script defer src="js/main.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfVn3q_bZjXER6ZoM5saxoUavqlIRp5KQ&v=3&callback=initMap" onerror="error()">
     </script>

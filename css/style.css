@@ -56,14 +56,10 @@ width: 48%;
 }
  
 .opener{
-    -ms-transform: rotate(90deg); /* IE 9 */
-    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
     transform: rotate(90deg);
 }
 
 .rightimg{
-    -ms-transform: rotate(270deg); /* IE 9 */
-    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
     transform: rotate(270deg);
 }
 /* The side navigation menu */
@@ -80,10 +76,11 @@ width: 48%;
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 @media screen and (max-height: 450px)
-.sidenav {
-    padding-top: 0px;
+{	
+	.sidenav {
+		padding-top: 0px;
+	}
 }
-
 
 /* The navigation menu links */
 .sidenav a {

@@ -1,15 +1,15 @@
 var map;
 
 
-var model  ={
-  locations :[
-          {title: 'Egypt pyramds', location: {lat: 29.979235, lng: 31.134202}},
-          {title: 'Egyptian Museum', location: {lat: 30.047848, lng: 31.233637}},
-          {title: 'Tahrir square', location: {lat: 30.044456, lng: 31.235646}},
-          {title: 'Abdeen Palace Museum', location: {lat: 30.043018, lng: 31.247778}},
-          {title: 'Cairo Opera House', location: {lat: 30.042684, lng:  31.223981}},
-          {title: 'Egypt Smart-Village', location: {lat: 30.073165, lng: 31.017884}}
-        ],
+var model  = {
+	locations : [
+        {title: 'Egypt pyramds', location: {lat: 29.979235, lng: 31.134202}},
+        {title: 'Egyptian Museum', location: {lat: 30.047848, lng: 31.233637}},
+        {title: 'Tahrir square', location: {lat: 30.044456, lng: 31.235646}},
+        {title: 'Abdeen Palace Museum', location: {lat: 30.043018, lng: 31.247778}},
+        {title: 'Cairo Opera House', location: {lat: 30.042684, lng:  31.223981}},
+        {title: 'Egypt Smart-Village', location: {lat: 30.073165, lng: 31.017884}}
+    ],
     markers : []
 };
 
@@ -18,54 +18,45 @@ var model  ={
 
 
 
-var viewModel={
-     locations : ko.observableArray(model.locations),
-    filter : ko.observable("")
-};
+var viewModel = {
+		locations : ko.observableArray(model.locations),
+		filter : ko.observable("")
+	};
+
 
 // Fillter Locations 
-
-viewModel.filteredItems = ko.computed(function() {
+viewModel.filteredItems = ko.computed(function () {
     var filter = this.filter().toLowerCase();
     if (!filter) {
         return this.locations();
     } else {
-        
-        var temp = ko.utils.arrayFilter(this.locations(), function(item) {
-            // Check If Title start With THe Word That USer ENter OR not
-            return item.title.toLowerCase().startsWith(filter);
+		return ko.utils.arrayFilter(this.locations(), function (item) {
+			// Check If Title start With THe Word That USer ENter OR not
+			return item.title.toLowerCase().startsWith(filter);
         });
-        
-        return temp;
     }
 }, viewModel);
 
-viewModel.filteredItems.subscribe(function(){
-    renderMap()
+viewModel.filteredItems.subscribe(function () {
+    renderMap();
 });
 
 // Function That Called When USer Click On  Any Item Of The List
-this.clickMe = function(title) {
+var clickMe = function (title) {
     var marker = "";
     //  get The Marker 
     markers.forEach(function(item){
         if (item.title == title )
             marker = item;
     });
-    if (marker != "")
+    if (marker !== "")
         // Trigger it :) (Simulate the Click of User)
         google.maps.event.trigger(marker, 'click');
-} 
-
-
-
-
-
+}; 
 
 
 // Create a new blank array for all the listing markers.
 var markers = model.markers;
-var firtsTime = true;
 function initMap() {
 // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
@@ -150,13 +141,11 @@ function initMap() {
       elementType: 'labels.text.stroke',
       stylers: [{color: '#fff'}]
     }
-  ]
-,
+  ],
     mapTypeControl: false
 });
      renderMap();
 }
-
 
 
 function renderMap(){
@@ -170,8 +159,6 @@ function renderMap(){
     // Normally we'd have these in a database instead.
     var locations = viewModel.filteredItems();
     var largeInfowindow = new google.maps.InfoWindow();
-    this.JSONdata = null;
-    var self =this
     // The following group uses the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
           // Get the position from the location array.
@@ -200,7 +187,7 @@ function renderMap(){
 // This function will loop through the markers array and display them all.
 function showListingsWihBounds() {
 if (markers.length == 0){
-    return
+    return ;
 }
 var bounds = new google.maps.LatLngBounds();
 // Extend the boundaries of the map for each marker and display the marker
@@ -220,7 +207,7 @@ function populateInfoWindow(marker, infowindow) {
         if (infowindow.marker != marker) {
           markers.forEach(function(marker){
               marker.setAnimation(null);
-          })
+          });
           var key = 'd9effb32e73cbf6f0145df0cff955222';
           infowindow.marker = marker;
           // Get Images For place from Fliker API
@@ -230,7 +217,7 @@ function populateInfoWindow(marker, infowindow) {
                 type : 'POST',
                 success : function(data) {
                     // Asign A Data And Title To InfoWindow
-                    var content = "<div class='marker'><img class='markerImage' src="+data["photos"]['photo'][0]['url_s']+"><p class='h3'>"+ marker.title +"</p></div>"
+                    var content = "<div class='marker'><img class='markerImage' src="+data.photos.photo[0].url_s+"><p class='h3'>"+ marker.title +"</p></div>";
                     infowindow.setContent(content);
                     infowindow.open(map, marker);
                     }
@@ -251,7 +238,7 @@ function populateInfoWindow(marker, infowindow) {
 // Dispaly Error Message IF Google Map Get Error
 
 function error(){
-    alert("Error in Google Map API Call Please Check Your Connection")
+    alert("Error in Google Map API Call Please Check Your Connection");
 }
 
 
