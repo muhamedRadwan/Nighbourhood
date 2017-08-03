@@ -9,9 +9,9 @@
     <div class="container-fluid">
       <div class="row">
         <div id="mySidenav" class="sidenav">
-          <input type="text" placeholder="Filter" id="filter">
-          <ul class="text-center nav" id="places" data-bind="foreach: locations">
-            <li data-bind="text: title"></li>
+          <input type="text" placeholder="Filter" id="filter" data-bind="value: filter, valueUpdate: 'afterkeydown'">
+          <ul class="text-center nav" id="places" data-bind="foreach: filteredItems">
+            <li data-bind="text: title, click: function () { clickMe(title);}"></li>
           </ul>
         </div>
             <span class="navbar-opener"><img class="opener" src="3.gif" width="35px" height="35px" title="Search"></span>
@@ -28,7 +28,7 @@
     <script src="js/GoogleMap.js"></script>
     <script src="js/main.js"></script>
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfVn3q_bZjXER6ZoM5saxoUavqlIRp5KQ&v=3&callback=octupus.init">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfVn3q_bZjXER6ZoM5saxoUavqlIRp5KQ&v=3&callback=initMap" onerror="error()">
     </script>
 
   </body>

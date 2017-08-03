@@ -35,7 +35,7 @@ width: 48%;
     
 }
 .nav>li {
-    background-color: black;
+    background-color: #242f3e;
     border-bottom: white 2px solid;
     padding: 13px;
     font-size: large;
@@ -45,6 +45,8 @@ width: 48%;
 }
 .nav>li:hover{
     color: #acadad;
+    background-color: #5a4739;
+    transition: .7s;
 }
 #filter{
     width: 100%;
@@ -72,7 +74,7 @@ width: 48%;
     z-index: 1; /* Stay on top */
     top: 0;
     left: 0;
-    background-color: #111; /* Black*/
+    background-color: #17263c; 
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 0; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
@@ -117,3 +119,22 @@ width: 48%;
 @media screen and (max-height: 450px) {
     .sidenav a {font-size: 18px;}
 }
+
+
+/*Marker*/
+
+.marker{
+    display: inline;
+    
+}
+
+.markerImage{
+    width:50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0px 3px;
+}
+.h3{
+    display: inline;
+}
+

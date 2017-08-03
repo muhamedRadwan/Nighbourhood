@@ -1,23 +1,75 @@
 var map;
 
-var model=function(){
-     this.locations = ko.observableArray([
+
+var model  ={
+  locations :[
           {title: 'Egypt pyramds', location: {lat: 29.979235, lng: 31.134202}},
-          {title: 'Egyption museum', location: {lat: 30.047848, lng: 31.233637}},
+          {title: 'Egyptian Museum', location: {lat: 30.047848, lng: 31.233637}},
           {title: 'Tahrir square', location: {lat: 30.044456, lng: 31.235646}},
           {title: 'Abdeen Palace Museum', location: {lat: 30.043018, lng: 31.247778}},
-          {title: 'Opera Land', location: {lat: 30.042684, lng:  31.223981}},
-          {title: 'Smart village', location: {lat: 30.073165, lng: 31.017884}}
-        ]);
-    this.markers = ko.observableArray();
+          {title: 'Cairo Opera House', location: {lat: 30.042684, lng:  31.223981}},
+          {title: 'Egypt Smart-Village', location: {lat: 30.073165, lng: 31.017884}}
+        ],
+    markers : []
 };
 
+
+
+
+
+
+var viewModel={
+     locations : ko.observableArray(model.locations),
+    filter : ko.observable("")
+};
+
+// Fillter Locations 
+
+viewModel.filteredItems = ko.computed(function() {
+    var filter = this.filter().toLowerCase();
+    if (!filter) {
+        return this.locations();
+    } else {
+        
+        var temp = ko.utils.arrayFilter(this.locations(), function(item) {
+            // Check If Title start With THe Word That USer ENter OR not
+            return item.title.toLowerCase().startsWith(filter);
+        });
+        
+        return temp;
+    }
+}, viewModel);
+
+viewModel.filteredItems.subscribe(function(){
+    renderMap()
+});
+
+// Function That Called When USer Click On  Any Item Of The List
+this.clickMe = function(title) {
+    var marker = "";
+    //  get The Marker 
+    markers.forEach(function(item){
+        if (item.title == title )
+            marker = item;
+    });
+    if (marker != "")
+        // Trigger it :) (Simulate the Click of User)
+        google.maps.event.trigger(marker, 'click');
+} 
+
+
+
+
+
+
+
 // Create a new blank array for all the listing markers.
-var markers = model.markers
+var markers = model.markers;
+var firtsTime = true;
 function initMap() {
 // Constructor creates a new map - only center and zoom are required.
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 40.7413549, lng: -73.9980244},
+        center: {lat: 30.047848, lng: 31.233637},
         zoom: 13,
         styles: [
     {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
@@ -102,150 +154,106 @@ function initMap() {
 ,
     mapTypeControl: false
 });
-// These are the real estate listings that will be shown to the user.
-// Normally we'd have these in a database instead.
-   var locations = model.locations;
+     renderMap();
+}
+
+
+
+function renderMap(){
+    
+    //Delete All Markers From Map if any 
+    markers.forEach(function(marker){
+       marker.setMap(null);
+    });
+    markers= [];
+    // These are the real estate listings that will be shown to the user.
+    // Normally we'd have these in a database instead.
+    var locations = viewModel.filteredItems();
     var largeInfowindow = new google.maps.InfoWindow();
+    this.JSONdata = null;
+    var self =this
     // The following group uses the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
-      // Get the position from the location array.
-      var position = locations[i].location;
-      var title = locations[i].title;
-      // Create a marker per location, and put into markers array.
-       var marker = new google.maps.Marker({
-        position: position,
-        title: title,
-        animation: google.maps.Animation.DROP,
-        id: i
-      });
-      // Push the marker to our array of markers.
-      markers.push(marker);
-      // Create an onclick event to open an infowindow at each marker.
-      marker.addListener('click', function() {
-        populateInfoWindow(this, largeInfowindow);
-      });
+          // Get the position from the location array.
+          var position = locations[i].location;
+          var title = locations[i].title;
+          // Create a marker per location, and put into markers array.
+          var marker = new google.maps.Marker({
+            position : position,
+            title : title,
+            animation : google.maps.Animation.DROP,
+            id: i,
+        });
+        markers.push(marker);
+        marker.addListener('click', function() {
+            populateInfoWindow(this, largeInfowindow);
+        });
+        
     }
-    
+    showListingsWihBounds();
 }
+
+
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
-var imagesrc = '3.jpg';
-function populateInfoWindow(marker, infowindow) {
-// Check to make sure the infowindow is not already opened on this marker.
-if (infowindow.marker != marker) {
-  infowindow.marker = marker;
-
-  infowindow.setContent('<div>' + marker.title + '</div>');
-  infowindow.setContent('<div> <img src="' + imagesrc + '"/></div>');
-  infowindow.open(map, marker);
-  // Make sure the marker property is cleared if the infowindow is closed.
-  infowindow.addListener('closeclick', function() {
-    infowindow.marker = null;
-  });
-}
-}
 // This function will loop through the markers array and display them all.
-function showListings() {
+function showListingsWihBounds() {
+if (markers.length == 0){
+    return
+}
 var bounds = new google.maps.LatLngBounds();
 // Extend the boundaries of the map for each marker and display the marker
 for (var i = 0; i < markers.length; i++) {
   markers[i].setMap(map);
   bounds.extend(markers[i].position);
 }
+
 map.fitBounds(bounds);
 }
-// This function will loop through the listings and hide them all.
-function hideListings() {
-for (var i = 0; i < markers.length; i++) {
-  markers[i].setMap(null);
-}
-}
 
-var octupus={
-    filterList : [],
-    init : function(){
-        initMap();
-        viewlocations.init();
-        showListings();
-        filter.init();
-        this.filterList = model.locations;
-    },
-    getAllLocations : function(){
-        return model.locations;
-    },
-    gitMarkers : function(){
-        return model.markers;
-    },
-    getFilterList : function(subString){
-        if (subString == null){
-            return this.gitAllLocations();
-        }
-        var locations = this.gitAllLocations();
-        var length = locations().length;
-        this.filterList = []
-        for(var i = 0; i < length;  i++){
-            if (locations()[i].title.startsWith(subString))
-                {
-                    this.filterList.push(locations()[i]);
-                }
-        }
-        return this.filterList;
-    }
-};
 
-var viewlocations ={
-    init:function(){
-        this.search = document.getElementById('search');
-        this.places = document.getElementById('places');
-        this.key = 'd9effb32e73cbf6f0145df0cff955222';
-        this.largeInfowindow = new google.maps.InfoWindow();
-        viewlocations.render();
-    },
-    render : function(){
-        var locations,location,li,markers;
-        locations = octupus.filterList;
-        markers = octupus.gitMarkers();
-        for(var i = 0; i < locations.length ; i++ ){
-            location = locations[i];
-            li = document.createElement('li');
-            li.innerHTML = location.title;
-            // Using jQuery
-            $.ajax({
-                url : "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+this.key+"&format=json&nojsoncallback=1&text="+location.title+"&extras=url_s&max=1",
+
+
+function populateInfoWindow(marker, infowindow) {
+        // Check to make sure the infowindow is not already opened on this marker.
+        if (infowindow.marker != marker) {
+          markers.forEach(function(marker){
+              marker.setAnimation(null);
+          })
+          var key = 'd9effb32e73cbf6f0145df0cff955222';
+          infowindow.marker = marker;
+          // Get Images For place from Fliker API
+          $.ajax({
+                url : "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+key+"&format=json&nojsoncallback=1&text="+marker.title+"&extras=url_s&max=1",
                 dataType : 'json',
                 type : 'POST',
                 success : function(data) {
-                    var marker = new google.maps.Marker({
-                    position : location.location,
-                    title : location.title,
-                    animation : google.maps.Animation.DROP,
-                    id: i
-                  });
-                markers.push(marker);
-                marker.addListener('click', function() {
-                    populateInfoWindow(this, this.largeInfowindow);
-                });
-                }
-            } );
-            li.addEventListener('click',(function(Copylocation){
-                return function(){
-                      window.alert(Copylocation.title)
-                }
-            })(location));
-            this.places.appendChild(li);
-        }
-    }
-};
-
-var filter ={
-    init : function(){
-        $('#filter').keyup(function(){
-           octupus.getFilterList(this.val());
+                    // Asign A Data And Title To InfoWindow
+                    var content = "<div class='marker'><img class='markerImage' src="+data["photos"]['photo'][0]['url_s']+"><p class='h3'>"+ marker.title +"</p></div>"
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                    }
+        }).fail(function(){
+            alert("Error in Flickr API Call Please Check Your Connection");
+        });
+        // Animate The Marker 
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        // Make sure the marker property is cleared if the infowindow is closed.
+        infowindow.addListener('closeclick',function(){
+            infowindow.marker.setAnimation(null);
+            infowindow.setMarker = null;
         });
     }
-    
-    
-};
+} 
 
-ko.applyBindings(new model());
+
+// Dispaly Error Message IF Google Map Get Error
+
+function error(){
+    alert("Error in Google Map API Call Please Check Your Connection")
+}
+
+
+
+ko.applyBindings(viewModel);
