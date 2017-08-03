@@ -172,21 +172,25 @@ function renderMap(){
             id: i,
         });
         markers.push(marker);
-        marker.addListener('click', function() {
-            populateInfoWindow(this, largeInfowindow);
-        });
+      	addListener(marker,largeInfowindow);
         
     }
     showListingsWihBounds();
 }
 
+// Add Event Listener to Marker
+function addListener(marker,largeInfowindow){
+	 marker.addListener('click', function() {
+     populateInfoWindow(this, largeInfowindow);
+   });
+}
 
 // This function populates the infowindow when the marker is clicked. We'll only allow
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
 // This function will loop through the markers array and display them all.
 function showListingsWihBounds() {
-if (markers.length == 0){
+if (markers.length === 0){
     return ;
 }
 var bounds = new google.maps.LatLngBounds();
